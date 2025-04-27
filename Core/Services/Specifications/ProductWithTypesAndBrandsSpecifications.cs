@@ -9,7 +9,7 @@ using Shared;
 
 namespace Services.Specifications
 {
-    public class ProductWithTypesAndBrandsSpecifications : BaseSpecifications<Product, int>
+    internal class ProductWithTypesAndBrandsSpecifications : BaseSpecifications<Product, int>
     {
         public ProductWithTypesAndBrandsSpecifications(int id) : base(P => P.Id == id) => ApplyIncludes();
 

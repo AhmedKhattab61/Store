@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Services.Abstractions;
 using Services.Specifications;
@@ -17,11 +18,9 @@ namespace Services
         public async Task<PaginationResponse<ProductDto>> GetAllProductsAsync(ProductSpecificationsParameters specParams)
         {
             var spec = new ProductWithTypesAndBrandsSpecifications(specParams);
-
             var products = await unitOfWork.GetRepository<Product, int>().GetAllAsync(spec);
 
             var specCount = new ProductWithCountSpecifications(specParams);
-
             var count = await unitOfWork.GetRepository<Product, int>().CountAsync(specCount);
 
             var result = mapper.Map<IEnumerable<ProductDto>>(products);
@@ -33,7 +32,7 @@ namespace Services
         {
             var spec = new ProductWithTypesAndBrandsSpecifications(id);
             var product = await unitOfWork.GetRepository<Product, int>().GetByIdAsync(spec);
-            if (product is null) return null;
+            if (product is null) throw new ProductNotFoundException(id);
 
             var result = mapper.Map<ProductDto>(product);
             return result;
