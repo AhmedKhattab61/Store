@@ -1,6 +1,9 @@
 ﻿using Domain.Contracts;
+using Domain.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
+using Persistence.Identity;
 using Services;
 using Shared.ErrorModels;
 using Store.API.MiddleWares;
@@ -16,6 +19,7 @@ namespace Store.API.Extensions
             services.ConfigureServices();
             services.AddInfrastructureServices(configuration);
             services.AddApplicationSerivces();
+            services.AddIdentityServices();
 
             return services;
         }
@@ -31,6 +35,14 @@ namespace Store.API.Extensions
         {
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            return services;
+        }
+
+        private static IServiceCollection AddIdentityServices(this IServiceCollection services)
+        {
+            services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<StoreIdentityDbContext>();
 
             return services;
         }
